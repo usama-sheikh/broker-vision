@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -7,7 +7,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/logos/broker vision-fin-02.jpeg') }}">
     <link rel="icon" type="image/png" href="{{ asset('assets/img/logos/broker vision-fin-02.jpeg') }}">
     <title>
-        Sign In | {{config('app.name')}}
+        Rest Password | {{config('app.name')}}
     </title>
     <!--     Fonts and icons     -->
     <link rel="stylesheet" type="text/css"
@@ -29,11 +29,12 @@
         .bg-gradient-dark {
             background-image: linear-gradient(195deg, #1a2035 0%, #1a2035 100%);
         }
+
         input.form-control {
             color: white !important;
         }
 
-        .input-group.input-group-outline.is-focused .form-label+.form-control, .input-group.input-group-outline.is-filled .form-label+.form-control {
+        .input-group.input-group-outline.is-focused .form-label + .form-control, .input-group.input-group-outline.is-filled .form-label + .form-control {
             border-color: #04adbf !important;
             border-top-color: transparent !important;
             box-shadow: inset 1px 0 #04adbf, inset -1px 0 #04adbf, inset 0 -1px #04adbf !important;
@@ -69,28 +70,65 @@
                     <div class="card bg-dark z-index-0 fadeIn3 fadeInBottom">
                         <div class="card-header bg-dark p-0 mt-n4 mb-0 p-3">
                             <div class="bg-dark border-radius-lg py-3 pe-1">
-                                <h4 class="text-white font-weight-normal text-center mt-2 mb-0">Admin Sign In</h4>
+                                <h4 class="text-white font-weight-normal text-center mt-2 mb-0">Reset Your Password</h4>
                             </div>
                         </div>
                         <div class="card-body pt-0">
+                            @if (session('status'))
+                                <div class="alert alert-success alert-dismissible text-white" role="alert">
+                                    <span class="text-sm"><b>Success!</b> {{ session('status') ?? 'Success' }}</span>
+                                    <button type="button" class="btn-close text-lg py-3 opacity-10"
+                                            data-bs-dismiss="alert"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
+                            @if (session('error'))
+                                <div class="alert alert-danger alert-dismissible text-white" role="alert">
+                                    <span class="text-sm"><b>Error!</b> {{ session('error') ?? 'Error' }}</span>
+                                    <button type="button" class="btn-close text-lg py-3 opacity-10"
+                                            data-bs-dismiss="alert"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
+                            <form role="form" class="text-start" method="POST" action="{{ route('password.update') }}"
+                                  autocomplete="off">
+                            @csrf
+                            <!-- Password Reset Token -->
+                                <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
-                            <form role="form" class="text-start">
                                 <div class="input-group input-group-outline my-3">
                                     <label class="form-label">Email</label>
-                                    <input type="email" class="form-control">
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                           name="email" value="{{ old('email', $request->email) }}" required>
+                                    @error('email')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="input-group input-group-outline mb-3">
                                     <label class="form-label">Password</label>
-                                    <input type="password" class="form-control">
+                                    <input type="password"
+                                           class="form-control @error('password') is-invalid @enderror"
+                                           name="password">
+                                    @error('password')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
                                 </div>
-                                <div class="form-check form-switch d-flex align-items-center mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rememberMe">
-                                    <label class="form-check-label mb-0 ms-2" for="rememberMe">Remember me</label>
+                                <div class="input-group input-group-outline mb-3">
+                                    <label class="form-label">Confirm Password</label>
+                                    <input type="password"
+                                           class="form-control @error('password_confirmation') is-invalid @enderror"
+                                           name="password_confirmation">
+                                    @error('password_confirmation')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="text-center">
-                                    <a href="#" class="btn bg-gradient-primary w-100
-                                    my-4 mb-2">Sign In</a>
-
+                                    <button type="submit" class="btn bg-gradient-primary w-100 my-2 mb-2">Reset Password
+                                    </button>
                                 </div>
                             </form>
                         </div>

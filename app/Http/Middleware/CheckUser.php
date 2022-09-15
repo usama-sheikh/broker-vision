@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class Admin
+class CheckUser
 {
     /**
      * Handle an incoming request.
@@ -17,10 +17,17 @@ class Admin
      */
     public function handle(Request $request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->type == 1) {
-            return $next($request);
+        if (Auth::check()) {
+            if(auth()->user()->type == '1')
+                $user_view = 'admin.dashboard';
+            elseif(auth()->user()->type == '2')
+                $user_view = 'client.dashboard';
+            else
+                return response()->view('errors.' . '404', [], 404);
+
+            return redirect()->route($user_view);
         }
 
-        return redirect()->route('admin.login')->with('error', "Login first to access the admin portal.");
+        return redirect()->route('login');
     }
 }

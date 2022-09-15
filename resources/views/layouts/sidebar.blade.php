@@ -20,7 +20,7 @@
                        role="button" aria-expanded="false">
                         <img src="{{ auth()->user()->getUserPic() ?? '' }}" class="avatar loginUserProfile">
                         <span
-                            class="nav-link-text ms-2 ps-1">{{ auth()->user()->first_name ?? ''}} {{ auth()->user()->last_name ?? '' }}</span>
+                            class="nav-link-text ms-2 ps-1">{{ auth()->user()->name ?? '' }}</span>
                     </a>
                     <div class="collapse" id="ProfileNav">
                         <ul class="nav ">
@@ -89,7 +89,7 @@
                        role="button" aria-expanded="false">
                         <img src="{{ auth()->user()->getUserPic() ?? '' }}" class="avatar loginUserProfile">
                         <span
-                            class="nav-link-text ms-2 ps-1">{{ auth()->user()->first_name ?? ''}} {{ auth()->user()->last_name ?? '' }}</span>
+                            class="nav-link-text ms-2 ps-1">{{ auth()->user()->name ?? '' }}</span>
                     </a>
                     <div class="collapse" id="ProfileNav">
                         <ul class="nav ">

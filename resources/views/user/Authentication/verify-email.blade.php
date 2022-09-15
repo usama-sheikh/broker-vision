@@ -7,7 +7,7 @@
     <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('assets/img/logos/broker vision-fin-02.jpeg') }}">
     <link rel="icon" type="image/png" href="{{ asset('assets/img/logos/broker vision-fin-02.jpeg') }}">
     <title>
-        Sign In | {{config('app.name')}}
+        Email Verify | {{config('app.name')}}
     </title>
     <!--     Fonts and icons     -->
     <link rel="stylesheet" type="text/css"
@@ -29,11 +29,12 @@
         .bg-gradient-dark {
             background-image: linear-gradient(195deg, #1a2035 0%, #1a2035 100%);
         }
+
         input.form-control {
             color: white !important;
         }
 
-        .input-group.input-group-outline.is-focused .form-label+.form-control, .input-group.input-group-outline.is-filled .form-label+.form-control {
+        .input-group.input-group-outline.is-focused .form-label + .form-control, .input-group.input-group-outline.is-filled .form-label + .form-control {
             border-color: #04adbf !important;
             border-top-color: transparent !important;
             box-shadow: inset 1px 0 #04adbf, inset -1px 0 #04adbf, inset 0 -1px #04adbf !important;
@@ -66,32 +67,44 @@
         <div class="container my-auto">
             <div class="row">
                 <div class="col-lg-4 col-md-8 col-12 mx-auto">
-                    <div class="card bg-dark z-index-0 fadeIn3 fadeInBottom">
+                    <div class="card bg-dark z-index-0 fadeIn3">
                         <div class="card-header bg-dark p-0 mt-n4 mb-0 p-3">
                             <div class="bg-dark border-radius-lg py-3 pe-1">
-                                <h4 class="text-white font-weight-normal text-center mt-2 mb-0">Admin Sign In</h4>
+                                <h4 class="text-white font-weight-normal text-center mt-2 mb-0">Verify Your Email</h4>
                             </div>
                         </div>
                         <div class="card-body pt-0">
-
-                            <form role="form" class="text-start">
-                                <div class="input-group input-group-outline my-3">
-                                    <label class="form-label">Email</label>
-                                    <input type="email" class="form-control">
+                            @if (session('status') == 'verification-link-sent')
+                                <div class="alert alert-success alert-dismissible text-white" role="alert">
+                                    <span class="text-sm"><b>Success!</b> A new verification link has been sent to the email address you provided during registration.</span>
+                                    <button type="button" class="btn-close text-lg py-3 opacity-10"
+                                            data-bs-dismiss="alert"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
                                 </div>
-                                <div class="input-group input-group-outline mb-3">
-                                    <label class="form-label">Password</label>
-                                    <input type="password" class="form-control">
-                                </div>
-                                <div class="form-check form-switch d-flex align-items-center mb-3">
-                                    <input class="form-check-input" type="checkbox" id="rememberMe">
-                                    <label class="form-check-label mb-0 ms-2" for="rememberMe">Remember me</label>
-                                </div>
+                            @endif
+                            <p class="text-sm text-center">
+                                Thanks for signing up! Before getting started, could you verify your email address by
+                                clicking on the link we just emailed to you? If you didn't receive the email, we will
+                                gladly send you another.
+                            </p>
+                            <form method="POST" action="{{ route('verification.send') }}">
+                                @csrf
                                 <div class="text-center">
-                                    <a href="#" class="btn bg-gradient-primary w-100
-                                    my-4 mb-2">Sign In</a>
-
+                                    <button type="submit" class="btn bg-gradient-primary w-100 my-2 mb-2">Resend
+                                        Verification Email
+                                    </button>
                                 </div>
+                            </form>
+
+                            <form method="POST" action="{{ route('logout') }}">
+                                @csrf
+                                <p class="mt-2 text-sm text-center">
+                                    Want to change account?
+                                    <button type="submit" style="border: none;" class="underline text-primary text-gradient
+                                    font-weight-bold">Logout</button>
+                                </p>
                             </form>
                         </div>
                     </div>

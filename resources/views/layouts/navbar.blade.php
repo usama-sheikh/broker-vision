@@ -41,17 +41,17 @@
             </div>
             <ul class="navbar-nav  justify-content-end">
                 <li class="nav-item">
-                    {{--@php
+                    @php
                         if(auth()->user()->type == '1')
-                        $user_profile = route('admin.profile.index');
+                        $user_profile = route('admin.settings.index');
                         elseif(auth()->user()->type == '2')
-                        $user_profile = route('user.profile.index');
+                        $user_profile = route('user.settings.index');
                         else
                         $user_profile = "#";
                     @endphp
                     <a href="{{ $user_profile ?? '#' }}" class="nav-link text-body p-0 position-relative" role="button" aria-expanded="false">
                         <img src="{{ auth()->user()->getUserPic() ?? '' }}" class="avatar loginUserProfile">
-                    </a>--}}
+                    </a>
                 </li>
             </ul>
         </div>

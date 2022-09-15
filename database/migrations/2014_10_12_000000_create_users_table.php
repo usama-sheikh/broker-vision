@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('picture')->nullable();
             $table->integer('type')->comment('1=Admin, 2=User')->default(2);
             $table->rememberToken();
+            $table->softDeletes();
             $table->timestamps();
         });
     }
