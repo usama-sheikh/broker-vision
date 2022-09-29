@@ -17,6 +17,7 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ asset('assets/css/material-dashboard.css?v=3.0.2') }}" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ asset('assets/sweetalert2/dist/sweetalert2.min.css') }}">
     @yield('style')
     <style>
         .bg-dark {
@@ -92,6 +93,13 @@
         /* Firefox */
         input[type=number] {
             -moz-appearance: textfield !important;
+        }
+
+        .alert-success {
+            background-image: linear-gradient(195deg, #04adbf1a 0%, #04adbf 100%) !important;
+        }
+        .alert-danger {
+            background-image: linear-gradient(195deg, #ef535000 0%, #04adbf 100%) !important;
         }
     </style>
 </head>

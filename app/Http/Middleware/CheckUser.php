@@ -21,7 +21,7 @@ class CheckUser
             if(auth()->user()->type == '1')
                 $user_view = 'admin.dashboard';
             elseif(auth()->user()->type == '2')
-                $user_view = 'client.dashboard';
+                $user_view = 'user.dashboard';
             else
                 return response()->view('errors.' . '404', [], 404);
 

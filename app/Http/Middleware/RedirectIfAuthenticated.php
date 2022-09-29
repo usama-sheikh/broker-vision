@@ -23,7 +23,18 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                if (Auth::check()) {
+                    if(auth()->user()->type == '1')
+                        $user_view = 'admin.dashboard';
+                    elseif(auth()->user()->type == '2')
+                        $user_view = 'user.dashboard';
+                    else
+                        return response()->view('errors.' . '404', [], 404);
+
+                    return redirect()->route($user_view);
+                }
+
+                return redirect()->route('login');
             }
         }
 

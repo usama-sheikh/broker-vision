@@ -137,31 +137,47 @@
                     <div class="card-body pt-0">
                         <div class="row">
                             <div class="col-md-3 col-lg-3">
-                                <label class="text-sm pt-2">Current Passowrd</label>
+                                <label class="text-sm pt-2">Current Password</label>
                             </div>
                             <div class="col-md-9 col-lg-9">
                                 <div class="input-group input-group-outline">
-                                    <input type="password" name="Name" value="12345" class="form-control ms-1">
+                                    <input type="password" name="current_password"
+                                           value
+                                           class="form-control @error('new_password') is-invalid @enderror">
+                                    @error('new_password')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
                         <div class="row pt-3">
                             <div class="col-md-3 col-lg-3">
-                                <label class="text-sm pt-2">New Passowrd</label>
+                                <label class="text-sm pt-2">New Password</label>
                             </div>
                             <div class="col-md-9 col-lg-9">
                                 <div class="input-group input-group-outline">
-                                    <input type="password" name="Name" value="12345" class="form-control ms-1">
+                                    <input type="password"
+                                           name="new_password"
+                                          class="form-control @error('new_password') is-invalid @enderror">
+                                    @error('new_password')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
                         <div class="row pt-3">
                             <div class="col-md-3 col-lg-3">
-                                <label class="text-sm pt-2">Confirm New Passowrd</label>
+                                <label class="text-sm pt-2">Confirm New Password</label>
                             </div>
                             <div class="col-md-9 col-lg-9">
                                 <div class="input-group input-group-outline">
-                                    <input type="password" name="Name" value="12345" class="form-control ms-1">
+                                    <label class="form-label">Confirm Password</label>
+                                    <input type="password"
+                                           class="form-control @error('password_confirmation') is-invalid @enderror"
+                                           name="password_confirmation">
+                                    @error('password_confirmation')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
                                 </div>
                             </div>
                         </div>

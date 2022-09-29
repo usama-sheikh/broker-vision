@@ -14,6 +14,7 @@
 <script src="{{ asset("assets/js/plugins/world.js") }}"></script>
 <script src="{{ asset("assets/js/plugins/multistep-form.js") }}"></script>
 <script src="{{ asset("assets/js/plugins/flatpickr.min.js") }}"></script>
+<script src="{{ asset('assets/sweetalert2/dist/sweetalert2.min.js') }}"></script>
 
 @yield('script')
 

@@ -30,7 +30,7 @@ class UsersTableSeeder extends Seeder
                 'email_verified_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'password' => Hash::make('12345678'),
                 'picture' => NULL,
-                'type' => 2,
+                'type' => 1,
                 'remember_token' => 'nSpDpRZVztTw763gReuPXaQoXMajmY2knqw8wFaPP57Kd3Q17mzcswJ6IERE',
                 'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'updated_at' => Carbon::now()->format('Y-m-d H:i:s'),
@@ -40,7 +40,7 @@ class UsersTableSeeder extends Seeder
             array (
                 'id' => 2,
                 'name' => 'Broker Vision',
-                'email' => 'user@brokervision.comm',
+                'email' => 'user@brokervision.com',
                 'phone' => '12345678',
                 'email_verified_at' => Carbon::now()->format('Y-m-d H:i:s'),
                 'password' => Hash::make('12345678'),

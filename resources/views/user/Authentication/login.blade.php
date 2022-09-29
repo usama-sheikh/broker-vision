@@ -102,6 +102,7 @@
                                     <label class="form-label">Email</label>
                                     <input type="email" class="form-control @error('email') is-invalid @enderror"
                                            name="email" required>
+                                    <input type="hidden" name="type" value="2">
                                     @error('email')
                                     <span class="invalid-feedback" role="alert">{{ $message }}</span>
                                     @enderror

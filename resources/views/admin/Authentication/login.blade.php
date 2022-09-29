@@ -29,11 +29,12 @@
         .bg-gradient-dark {
             background-image: linear-gradient(195deg, #1a2035 0%, #1a2035 100%);
         }
+
         input.form-control {
             color: white !important;
         }
 
-        .input-group.input-group-outline.is-focused .form-label+.form-control, .input-group.input-group-outline.is-filled .form-label+.form-control {
+        .input-group.input-group-outline.is-focused .form-label + .form-control, .input-group.input-group-outline.is-filled .form-label + .form-control {
             border-color: #04adbf !important;
             border-top-color: transparent !important;
             box-shadow: inset 1px 0 #04adbf, inset -1px 0 #04adbf, inset 0 -1px #04adbf !important;
@@ -73,24 +74,55 @@
                             </div>
                         </div>
                         <div class="card-body pt-0">
+                            @if (session('success'))
+                                <div class="alert alert-success alert-dismissible text-white" role="alert">
+                                    <span class="text-sm"><b>Success!</b> {{ session('success') ?? 'Success' }}</span>
+                                    <button type="button" class="btn-close text-lg py-3 opacity-10"
+                                            data-bs-dismiss="alert"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
+                            @if (session('error'))
+                                <div class="alert alert-danger alert-dismissible text-white" role="alert">
+                                    <span class="text-sm"><b>Error!</b> {{ session('error') ?? 'Error' }}</span>
+                                    <button type="button" class="btn-close text-lg py-3 opacity-10"
+                                            data-bs-dismiss="alert"
+                                            aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            @endif
 
-                            <form role="form" class="text-start">
+                            <form role="form" class="text-start" method="POST" action="{{ route('login') }}"
+                                  autocomplete="off">
+                                @csrf
                                 <div class="input-group input-group-outline my-3">
                                     <label class="form-label">Email</label>
-                                    <input type="email" class="form-control">
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                           name="email" required>
+                                    <input type="hidden" name="type" value="2">
+                                    @error('email')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="input-group input-group-outline mb-3">
                                     <label class="form-label">Password</label>
-                                    <input type="password" class="form-control">
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                           name="password" required>
+                                    @error('password')
+                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                    @enderror
                                 </div>
                                 <div class="form-check form-switch d-flex align-items-center mb-3">
                                     <input class="form-check-input" type="checkbox" id="rememberMe">
                                     <label class="form-check-label mb-0 ms-2" for="rememberMe">Remember me</label>
                                 </div>
                                 <div class="text-center">
-                                    <a href="#" class="btn bg-gradient-primary w-100
-                                    my-4 mb-2">Sign In</a>
-
+                                    <button type="submit" class="btn bg-gradient-primary w-100
+                                    my-4 mb-2">Sign In
+                                    </button>
                                 </div>
                             </form>
                         </div>
