@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin\Artist;
 
 use App\Http\Controllers\Controller;
+use App\Models\Artist;
 use Illuminate\Http\Request;
 
 class ArtistController extends Controller
@@ -13,7 +14,8 @@ class ArtistController extends Controller
      */
     public function index(): \Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Contracts\Foundation\Application
     {
-        return view('admin.Artist.index');
+        $artists = Artist::where('user_id',auth()->user()->id)->paginate('10');
+        return view('admin.Artist.index', compact('artists'));
     }
 
     /**
@@ -22,7 +24,6 @@ class ArtistController extends Controller
      */
     public function addNewArtist(Request $request)
     {
-        dd($request->all());
         $request->validate([
             'title' => 'required',
             'origin' => 'required',
@@ -30,6 +31,7 @@ class ArtistController extends Controller
             'members' => 'required',
             'url' => 'required',
             'description' => 'required',
+            'image' => 'required|image|mimes:jpeg,png,gif,svg',
         ]);
 
         $filename = null;
@@ -41,15 +43,31 @@ class ArtistController extends Controller
             $profile->move($destinationPath, $filename);
         }
 
-        $requestData = $request()->all();
+        $requestData = $request->all();
         $requestData['user_id'] = auth()->user()->id;
-        $requestData['type'] = 2; // 2=Manually
+        $requestData['image'] = $filename;
 
-        $addArtist = auth()->user()->create($requestData);
+        $addArtist = Artist::create($requestData);
         if ($addArtist) {
             return back()->with('success', 'Artist added successfully');
         } else {
             return back()->with('error', 'Something went wrong, Try again latter');
         }
+    }
+
+    /**
+     * Tracking Status
+     *
+     */
+    public function trackingStatus(Request $request)
+    {
+        if(Artist::find($request->tracking_id)->update(['tracking' => $request->status])){
+            $response['status']  = 200;
+            $response['message'] = 'Artist tracking status is update successfully.';
+        }else{
+            $response['status']  = 201;
+            $response['message'] = 'Unable to update artist tracking status.';
+        }
+        return response()->json($response);
     }
 }

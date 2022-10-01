@@ -15,6 +15,8 @@
 <script src="{{ asset("assets/js/plugins/multistep-form.js") }}"></script>
 <script src="{{ asset("assets/js/plugins/flatpickr.min.js") }}"></script>
 <script src="{{ asset('assets/sweetalert2/dist/sweetalert2.min.js') }}"></script>
+<!--bootstrap-notify-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mouse0270-bootstrap-notify/3.1.7/bootstrap-notify.min.js"></script>
 
 @yield('script')
 

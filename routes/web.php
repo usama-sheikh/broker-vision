@@ -29,6 +29,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
     Route::get('/users', [\App\Http\Controllers\Admin\User\UserController::class, 'index'])->name('admin.users.index');
     Route::get('/artist', [\App\Http\Controllers\Admin\Artist\ArtistController::class, 'index'])->name('admin.artist.index');
     Route::post('/artist/add', [\App\Http\Controllers\Admin\Artist\ArtistController::class, 'addNewArtist'])->name('admin.add.new.artist');
+    Route::post('/artist/tracking/status/update', [\App\Http\Controllers\Admin\Artist\ArtistController::class, 'trackingStatus'])->name('admin.artist.tracking.status');
     Route::get('/top/picks', [\App\Http\Controllers\Admin\TopPicks\TopPicksController::class, 'index'])->name('admin.top.picks.index');
     Route::get('/settings', [\App\Http\Controllers\Admin\Settings\SettingsController::class, 'index'])->name('admin.settings.index');
     Route::post('/settings/update/profile', [\App\Http\Controllers\Admin\Settings\SettingsController::class, 'updateProfile'])->name('admin.settings.update.profile');

@@ -18,6 +18,8 @@
     <!-- CSS Files -->
     <link id="pagestyle" href="{{ asset('assets/css/material-dashboard.css?v=3.0.2') }}" rel="stylesheet"/>
     <link rel="stylesheet" href="{{ asset('assets/sweetalert2/dist/sweetalert2.min.css') }}">
+    <script src="{{ asset('assets/js/plugins/datatables.js') }}"></script>
+
     @yield('style')
     <style>
         .bg-dark {
@@ -100,6 +102,14 @@
         }
         .alert-danger {
             background-image: linear-gradient(195deg, #ef535000 0%, #04adbf 100%) !important;
+        }
+        .is-invalid {
+            border: 1px solid #c95064 !important;
+        }
+
+        button.close {
+            background: none;
+            border: none;
         }
     </style>
 </head>
