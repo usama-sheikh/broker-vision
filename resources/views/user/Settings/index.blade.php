@@ -13,7 +13,37 @@
 
 @section('content')
     <div class="container-fluid py-4">
-
+        @if (session('success'))
+            <div class="alert alert-success alert-dismissible text-white" role="alert">
+                <span class="text-sm"><b>Success!</b> {{ session('success') ?? 'Success' }}</span>
+                <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+        @if (session('error'))
+            <div class="alert alert-danger alert-dismissible text-white" role="alert">
+                <span class="text-sm"><b>Error!</b> {{ session('error') ?? 'Error' }}</span>
+                <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible text-white" role="alert">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close text-lg py-3 opacity-10" data-bs-dismiss="alert"
+                        aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
         <div class="row">
             <div class="col-md-3 col-lg-3">
                 <div class="card sidecard">
@@ -67,35 +97,30 @@
                             <div class="col-md-6 col-lg-6">
                                 <h6 class="pb-0 py-2 text-bold text-white">Personal Info</h6>
                             </div>
+                            <div class="col-md-6 col-lg-6 col-sm-6 text-end">
+                                <button class="btn bg-none text-info btn-sm m-1" data-bs-toggle="modal"
+                                        data-bs-target="#updateProfile"><i class="fa fa-pen" aria-hidden="true"
+                                                                           style="font-size: 12px;color: wheat;border: 2px solid white;padding: 6px;border-radius: 19px;"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>
                     <div class="card-body pt-0">
                         <div class="row">
                             <div class="col-md-3 col-lg-3">
-                                <img src="{{ asset('assets/img/kal-visuals-square.jpg') }}" alt="img-blur-shadow"
+                                <img src="{{ auth()->user()->getUserPic() ?? '' }}" alt="img-blur-shadow"
                                      class="img-fluid shadow border-radius-lg">
                             </div>
                             <div class="col-md-9 col-lg-9">
                                 <div class="row">
                                     <div class="col-4">
-                                        <label class="form-label">First Name</label>
+                                        <label class="form-label">Name</label>
                                     </div>
                                     <div class="col-2">
                                         <label class="form-label">:</label>
                                     </div>
                                     <div class="col-4">
-                                        <label class="form-label text-white">John</label>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-4">
-                                        <label class="form-label">Last Name</label>
-                                    </div>
-                                    <div class="col-2">
-                                        <label class="form-label">:</label>
-                                    </div>
-                                    <div class="col-4">
-                                        <label class="form-label text-white">Doe</label>
+                                        <label class="form-label text-white">{{ auth()->user()->name ?? '' }}</label>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -106,7 +131,7 @@
                                         <label class="form-label">:</label>
                                     </div>
                                     <div class="col-4">
-                                        <label class="form-label text-white">(000) 00 000</label>
+                                        <label class="form-label text-white">{{ auth()->user()->phone ?? '' }}</label>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -117,7 +142,7 @@
                                         <label class="form-label">:</label>
                                     </div>
                                     <div class="col-4">
-                                        <label class="form-label text-white">John@gmail.com</label>
+                                        <label class="form-label text-white">{{ auth()->user()->email ?? '' }}</label>
                                     </div>
                                 </div>
                             </div>
@@ -135,57 +160,63 @@
                         </div>
                     </div>
                     <div class="card-body pt-0">
-                        <div class="row">
-                            <div class="col-md-3 col-lg-3">
-                                <label class="text-sm pt-2">Current Password</label>
-                            </div>
-                            <div class="col-md-9 col-lg-9">
-                                <div class="input-group input-group-outline">
-                                    <input type="password" name="current_password"
-                                           value
-                                           class="form-control @error('new_password') is-invalid @enderror">
-                                    @error('new_password')
-                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
-                                    @enderror
+                        <form method="post" action="{{ route('user.settings.change.password') }}">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-3 col-lg-3">
+                                    <label class="text-sm pt-2">Current Password</label>
+                                </div>
+                                <div class="col-md-9 col-lg-9">
+                                    <div class="input-group input-group-outline">
+                                        <label class="form-label">********</label>
+                                        <input type="password" name="current_password"
+                                               @if (old('password')) value="{{ old('current_password') ?? '' }}" @endif
+                                               class="form-control @error('current_password') is-invalid @enderror">
+                                        @error('current_password')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row pt-3">
-                            <div class="col-md-3 col-lg-3">
-                                <label class="text-sm pt-2">New Password</label>
-                            </div>
-                            <div class="col-md-9 col-lg-9">
-                                <div class="input-group input-group-outline">
-                                    <input type="password"
-                                           name="new_password"
-                                          class="form-control @error('new_password') is-invalid @enderror">
-                                    @error('new_password')
-                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
-                                    @enderror
+                            <div class="row pt-3">
+                                <div class="col-md-3 col-lg-3">
+                                    <label class="text-sm pt-2">New Password</label>
+                                </div>
+                                <div class="col-md-9 col-lg-9">
+                                    <div class="input-group input-group-outline">
+                                        <label class="form-label">********</label>
+                                        <input type="password"
+                                               name="password"
+                                               @if (old('password')) value="{{ old('password') ?? '' }}" @endif
+                                               class="form-control @error('password') is-invalid @enderror">
+                                        @error('password')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row pt-3">
-                            <div class="col-md-3 col-lg-3">
-                                <label class="text-sm pt-2">Confirm New Password</label>
-                            </div>
-                            <div class="col-md-9 col-lg-9">
-                                <div class="input-group input-group-outline">
-                                    <label class="form-label">Confirm Password</label>
-                                    <input type="password"
-                                           class="form-control @error('password_confirmation') is-invalid @enderror"
-                                           name="password_confirmation">
-                                    @error('password_confirmation')
-                                    <span class="invalid-feedback" role="alert">{{ $message }}</span>
-                                    @enderror
+                            <div class="row pt-3">
+                                <div class="col-md-3 col-lg-3">
+                                    <label class="text-sm pt-2">Confirm New Password</label>
+                                </div>
+                                <div class="col-md-9 col-lg-9">
+                                    <div class="input-group input-group-outline">
+                                        <label class="form-label">********</label>
+                                        <input type="password"
+                                               class="form-control @error('password_confirmation') is-invalid @enderror"
+                                               name="password_confirmation">
+                                        @error('password_confirmation')
+                                        <span class="invalid-feedback" role="alert">{{ $message }}</span>
+                                        @enderror
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row pt-3">
-                            <div class="text-right col-md-12 text-end">
-                                <button type="button" class="btn bg-gradient-primary btn-sm">SAVE CHANGES</button>
+                            <div class="row pt-3">
+                                <div class="text-right col-md-12 text-end">
+                                    <button type="submit" class="btn bg-gradient-primary">SAVE CHANGES</button>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -472,6 +503,95 @@
                                 </button>--}}
                                 <a class="btn bg-gradient-primary btn-sm"> Save</a>
                             </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="updateProfile" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+         role="dialog"
+         aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+            <div class="modal-content bg-dark">
+                <div class="card">
+                    <div class="card-header pb-0">
+                        <div class="row">
+                            <div class="col-md-6 col-lg-6">
+                                <h6 class="font-weight-bold text-white">Update Personal Info</h6>
+                            </div>
+                            <div class="col-md-6 col-lg-6 text-end">
+                                <button type="button" class="btn btn-link text-white font-weight-bold text-lg p-0"
+                                        onclick="return parent.closewindow();" data-bs-dismiss="modal">&times;
+                                </button>
+                            </div>
+                            <hr/>
+                        </div>
+                    </div>
+                    <div class="card-body pt-0">
+                        <div class="row">
+                            <form action="{{ route('user.settings.update.profile') }}" method="post"
+                                  name="updateProfile" enctype="multipart/form-data">
+                                @csrf
+                                <div class="col-md-12 col-lg-12 py-3">
+                                    <div class="row">
+                                        <div class="col-md-2 col-lg-2">
+                                            <label class="text-bold form-label my-2">Name</label>
+                                        </div>
+                                        <div class="col-md-10 col-lg-10">
+                                            <div class="input-group input-group-outline">
+                                                <input type="text" name="name" value="{{ auth()->user()->name ?? '' }}"
+                                                       placeholder="Name..."
+                                                       class="form-control ms-1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-lg-12 py-3">
+                                    <div class="row">
+                                        <div class="col-md-2 col-lg-2">
+                                            <label class="text-bold form-label my-2">Email</label>
+                                        </div>
+                                        <div class="col-md-10 col-lg-10">
+                                            <div class="input-group input-group-outline">
+                                                <input type="text" name="email"
+                                                       value="{{ auth()->user()->email ?? '' }}" placeholder="Email..."
+                                                       class="form-control ms-1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-lg-12 py-3">
+                                    <div class="row">
+                                        <div class="col-md-2 col-lg-2">
+                                            <label class="text-bold form-label my-2">Contact</label>
+                                        </div>
+                                        <div class="col-md-10 col-lg-10">
+                                            <div class="input-group input-group-outline">
+                                                <input type="text" name="phone"
+                                                       value="{{ auth()->user()->phone ?? '' }}"
+                                                       placeholder="Contact..."
+                                                       class="form-control ms-1">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 col-lg-12 my-3">
+                                    <div class="row">
+                                        <div class="col-md-2 col-lg-2">
+                                            <label class="text-bold form-label">Image</label>
+                                        </div>
+                                        <div class="col-md-10 col-lg-10">
+                                            <div class="form-control border dropzone" id="dropzone">
+                                                <input name="profile" type="file"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-right col-md-12 text-end">
+                                    <button type="submit" class="btn bg-gradient-primary">SAVE CHANGES</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>

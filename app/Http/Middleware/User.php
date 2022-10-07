@@ -6,6 +6,9 @@ use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @method static all()
+ */
 class User
 {
     /**

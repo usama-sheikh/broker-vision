@@ -83,14 +83,14 @@ class SettingsController extends Controller
         $userProfile = auth()->user()->update($requestData);
 
         if ($userProfile) {
-            return back()->with('success', 'Your profile is updated successfully');
+            return back()->with('success', 'Your password is updated successfully');
         } else {
             return back()->with('error', 'Something went wrong, Try again latter')->withInput();
         }
     }
 
     /**
-     * Change Password
+     * New Genre
      *
      */
     public function newGenre(Request $request)

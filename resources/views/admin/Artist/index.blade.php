@@ -6,7 +6,7 @@
     Admin
 @endsection
 @section('page')
-    Dashboard
+    Artist
 @endsection
 
 @section('style')
@@ -20,6 +20,8 @@
             padding: 0.57rem 1rem 0.57rem 1rem;
             background: #1f283e !important;
             width: 170px;
+            height: 40px;
+            margin-top: 2px;
         }
         .dataTable-dropdown {
             display: none;
@@ -87,7 +89,7 @@
                                     <table class="table table-flush" id="datatable-search"
                                            style="text-align: center;vertical-align: middle;">
                                         <div class="col-md-2 col-lg-2">
-                                            <h6 class="text-white" style=" margin-top: 32px; float: left; ">Users</h6>
+                                            <h6 class="text-white" style=" margin-top: 32px; float: left; ">ARTIST</h6>
                                         </div>
                                         <button class="btn bg-gradient-primary btn-sm m-1" style="margin-left: 8px !important;float: right;margin-top: 27px !important;padding: 0.590rem 1rem 0.590rem 1rem;" data-bs-toggle="modal"
                                                 data-bs-target="#newArtist">ADD NEW ARTIST
@@ -96,7 +98,7 @@
                                         <tr>
                                             <th class="text-uppercase text-secondary text-sm font-weight-bolder opacity-7">
                                             </th>
-                                            <th class="text-uppercase text-secondary text-sm font-weight-bolder opacity-7">
+                                            <th class="text-uppercase text-secondary text-sm font-weight-bolder opacity-7 text-center">
                                                 Title
                                             </th>
                                             <th class="text-uppercase text-secondary text-sm font-weight-bolder opacity-7 text-center">
@@ -118,7 +120,7 @@
                                         </thead>
                                         <tbody>
                                         @if(count($artists) > 0)
-                                            @php ($sr = $artists->perPage() * ($artists->currentPage() - 1) + 1)
+                                            {{--@php ($sr = $artists->perPage() * ($artists->currentPage() - 1) + 1)--}}
                                             @foreach($artists as $artist)
                                             <tr>
                                             <td class="text-sm font-weight-normal">
@@ -128,16 +130,16 @@
                                                 </div>
                                             </td>
                                             <td class="text-sm font-weight-normal">{{ $artist->title ?? '' }}</td>
-                                            <td class="text-sm font-weight-normal text-center">{{ $artist->title ?? '' }}</td>
                                             <td class="text-sm font-weight-normal text-center">{{ $artist->origin ?? '' }}</td>
+                                            <td class="text-sm font-weight-normal text-center">{{ $artist->genre ?? '' }}</td>
                                             <td class="text-sm font-weight-normal text-center">
                                                 <a href="{{ $artist->getArtistImage() ?? '' }}"
                                                    class="cursor-pointer" target="_blank"><img
                                                         src="{{ $artist->getArtistImage() ?? '' }}"
                                                         alt="img-blur-shadow" class="img-fluid shadow border-radius-lg"
-                                                        width="30"></a>
+                                                        style=" height: 34px !important; width: 50px !important; "></a>
                                             </td>
-                                            <td class="text-sm font-weight-normal text-center">{{ $artist->origin ?? '' }}</td>
+                                            <td class="text-sm font-weight-normal text-center">{{ $artist->members ?? '' }}</td>
                                             <td class="text-sm font-weight-normal d-lg-flex mt-3 justify-content-center">
                                                 <div class="form-check form-switch  text-center">
                                                     <input class="form-check-input tracking_status" type="checkbox"
@@ -151,9 +153,6 @@
                                         @endif
                                         </tbody>
                                     </table>
-                                    @if ($artists->hasPages())
-                                        {{ $artists->links() }}
-                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -228,7 +227,7 @@
                                     <div class="row">
                                         <div class="col-md-6 col-lg-6">
                                             <div class="input-group input-group-outline">
-                                                <input type="text" name="members" placeholder="Members"
+                                                <input type="number" name="members" placeholder="Members"
                                                        class="form-control ms-1 @error('members') is-invalid @enderror">
                                                 @error('members')
                                                 <span class="invalid-feedback" role="alert">{{ $message }}</span>

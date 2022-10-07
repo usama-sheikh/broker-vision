@@ -111,5 +111,29 @@
             background: none;
             border: none;
         }
+        button.swal2-confirm.btn.bg-gradient-success {
+            background: #04adbf;
+        }
+        .swal2-icon.swal2-warning.swal2-icon-show {
+            color: #04adbf;
+            border-color: #04adbf;
+        }
+        .swal2-icon.swal2-success {
+            border-color: #04adbf;
+            color: #04adbf;
+        }
+        .swal2-icon.swal2-success [class^=swal2-success-line] {
+            background-color: #04adbf;
+        }
+        .pagination {
+            float: right;
+            margin-right: 10px;
+        }
+        .page-item.active .page-link {
+            z-index: 3;
+            color: #fff;
+            background-color: #04adbf;
+            border-color: #04adbf;
+        }
     </style>
 </head>
