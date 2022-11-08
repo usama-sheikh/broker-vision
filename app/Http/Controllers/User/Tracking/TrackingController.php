@@ -24,4 +24,19 @@ class TrackingController extends Controller
     {
         return view('user.Tracking.tracking-artist');
     }
+
+    public function trackingProcess(Request $request)
+    {
+        $request->validate([
+            'url' => 'required|url',
+        ]);
+
+        config('constants.credit_report_url');
+        $validDomainURL = parse_url($request->url);
+        if($validDomainURL['host'] == 'vividseats.com'|| $validDomainURL['host'] == 'www.vividseats.com'){
+            return redirect()->route('user.tracking.artist.index', ['id' => 1]);
+        }else{
+            return redirect()->back()->with('error', 'Invalid URL, URL must be of vividseats.com');
+        }
+    }
 }

@@ -19,7 +19,7 @@
     <link id="pagestyle" href="{{ asset('assets/css/material-dashboard.css?v=3.0.2') }}" rel="stylesheet"/>
     <link rel="stylesheet" href="{{ asset('assets/sweetalert2/dist/sweetalert2.min.css') }}">
     <script src="{{ asset('assets/js/plugins/datatables.js') }}"></script>
-
+    <link href="{{ asset('assets/css/toastr.min.css') }}" rel="stylesheet"/>
     @yield('style')
     <style>
         .bg-dark {

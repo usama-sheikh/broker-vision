@@ -7,5 +7,6 @@
 @include('layouts.navbar')
 @yield('content')
 @include('layouts.script')
+@include('elements.alerts')
 </body>
 </html>

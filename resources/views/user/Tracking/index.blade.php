@@ -642,23 +642,26 @@
                     </div>
                     <div class="card-body pt-0">
                         <div class="row">
-                            <div class="col-md-12 col-lg-12">
-                                <div class="row">
-                                    <div class="col-md-12 col-lg-12">
-                                        <label class="text-bold form-label text-white"> URL</label>
-                                        <div class="input-group input-group-outline">
-                                            <input type="text" name="Name" placeholder="Paste URL here..."
-                                                   class="form-control ms-1">
+                            <form action="{{ route('user.tracking.process') }}" method="POST">
+                                @csrf
+                                <div class="col-md-12 col-lg-12">
+                                    <div class="row">
+                                        <div class="col-md-12 col-lg-12">
+                                            <label class="text-bold form-label text-white"> URL</label>
+                                            <div class="input-group input-group-outline">
+                                                <input type="text" name="url" placeholder="Paste URL here..."
+                                                       class="form-control ms-1">
+                                            </div>
+                                            <p class="py-3">Click on: <a class="text-info cursor-pointer"
+                                                                         href="http://www.vividaseats.com/">http://www.vividaseats.com/</a>
+                                                copy URL of your favourite artist/band show and paste to start tracking.</p>
                                         </div>
-                                        <p class="py-3">Click on: <a class="text-info cursor-pointer"
-                                                                     href="http://www.vividaseats.com/">http://www.vividaseats.com/</a>
-                                            copy URL of your favourite artist/band show and paste to start tracking.</p>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="text-right col-md-12 text-end">
-                                <a href="{{ route('user.tracking.artist.index',1) }}" class="btn bg-gradient-primary"> Save</a>
-                            </div>
+                                <div class="text-right col-md-12 text-end">
+                                    <button type="submit" class="btn bg-gradient-primary"> Save</button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
