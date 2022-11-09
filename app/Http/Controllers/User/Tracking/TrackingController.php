@@ -56,6 +56,19 @@ class TrackingController extends Controller
 //        $content = File::get(public_path()."/upload/first.txt");
 //        dd($content);
         $events =
+        $url = 'https://www.vividseats.com'. '/justin-bieber-tickets-london-o2-arena---london-2-14-2023--concerts-pop/production/3781333?AID=Performer-MainProductionList
+Feb 14, 2023';
+//        dd(redirect()->away($url));
+        $productionId = explode("/", parse_url($url, PHP_URL_PATH));
+
+        // fetching events code
+
+        $response = Http::get(config('constants.vs_tickets_api_url'), [
+            'productionId'=> $productionId[3],
+        ]);
+
+        dd($response->body());
+        // crawler scrape code
         $crawler = Goutte::request('GET', url('sample.html'));
         $crawler->filter('.styles_display-none__kcAaY > .styles_grid__2V6e6')->each(function ($node) {
             echo $node->filter('.styles_col__2dlgD a')->attr('href')  .'<br>';;
