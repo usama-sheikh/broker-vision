@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\User\Tracking;
 
 use App\Http\Controllers\Controller;
+use App\Models\Artist;
+use App\Models\ArtistEvent;
+use App\Models\Log;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -37,15 +41,49 @@ class TrackingController extends Controller
         $validDomainURL = parse_url($request->url);
         if($validDomainURL['host'] == 'vividseats.com'|| $validDomainURL['host'] == 'www.vividseats.com'){
 
-            $response = Http::get(config('constants.sc_api_url'), [
-                'url' => $request->url,
-                'api_key'=> config('constants.sc_api_key'),
-            ]);
+            try{
+                $celebrityUrl = $request->url;
+                $response = Http::get(config('constants.sc_api_url'), [
+                    'url' => $celebrityUrl,
+                    'api_key'=> config('constants.sc_api_key'),
+                ]);
 
-            $file = 'sample2.html';
-            $destinationPath=public_path()."/upload/";
-            if (!is_dir($destinationPath)) {  mkdir($destinationPath,0777,true);  }
-            File::put($destinationPath.$file,$response->body());
+                $sampleFile = 'sample2.html';
+                $destinationPath=public_path()."/sample/";
+                DB::beginTransaction();
+
+                $artist = new Artist();
+                $artist->user_id = auth()->user()->id;
+                $artist->url = $request->url;
+                $artist->save();
+
+                File::put($destinationPath.$sampleFile,$response->body());
+
+                $crawler = Goutte::request('GET', url('sample.html'));
+                $crawler->filter('.styles_display-none__kcAaY > .styles_grid__2V6e6')->each(function ($node, $artist,$celebrityUrl) {
+                    $artistEvent = new ArtistEvent();
+                    $artistEvent->artist_id = $artist->id;
+                    $artistEvent->user_id = auth()->user()->id;
+                    $artistEvent->event_url = $celebrityUrl;
+                    $celebrityEventUrl = 'https://www.vividseats.com'. $node->filter('.styles_col__2dlgD a')->attr('href');
+//                    echo $node->filter('.styles_col__2dlgD a')->attr('href')  .'<br>';;
+//                    echo $node->filter('.styles_col__2dlgD a div div p')->text()  .'<br>';;
+//                    echo $node->filter('.styles_col__2dlgD a div div div p')->text()  .'<br>';;
+//                    echo $node->filter('.styles_col__2dlgD > a > .styles_row__2rykK > .styles_col__2dlgD > p')->text() .'<br>';
+//                    echo $node->filter('.styles_col__2dlgD > a > .styles_row__2rykK > .styles_col__2dlgD > .styles_col__2dlgD p')->text() .'<br>';
+//                    echo $node->filter('.styles_col__2dlgD > a > .styles_row__2rykK > .styles_col__2dlgD > p')->last()->text() .'<br>';
+                });
+                // end task
+                // File::delete($destinationPath.$sampleFile);
+                DB::commit();
+            }catch (\Exception $e){
+                DB::rollBack();
+                $log = new Log();
+                $log->title = 'Error';
+                $log->description = $e->getMessage();
+                $log->save();
+                return redirect()->back()->with('error', 'Something went wrong. Please try again.');
+            }
             //    return redirect()->route('user.tracking.artist.index', ['id' => 1]);
         }else{
             return redirect()->back()->with('error', 'Invalid URL, URL must be of vividseats.com');
@@ -74,12 +112,9 @@ Feb 14, 2023';
             echo $node->filter('.styles_col__2dlgD a')->attr('href')  .'<br>';;
             echo $node->filter('.styles_col__2dlgD a div div p')->text()  .'<br>';;
             echo $node->filter('.styles_col__2dlgD a div div div p')->text()  .'<br>';;
-//            echo $node->filter('.styles_col__2dlgD a div .styles_col__2dlgD div p')->text();
             echo $node->filter('.styles_col__2dlgD > a > .styles_row__2rykK > .styles_col__2dlgD > p')->text() .'<br>';
             echo $node->filter('.styles_col__2dlgD > a > .styles_row__2rykK > .styles_col__2dlgD > .styles_col__2dlgD p')->text() .'<br>';
             echo $node->filter('.styles_col__2dlgD > a > .styles_row__2rykK > .styles_col__2dlgD > p')->last()->text() .'<br>';
-            //            echo $node->filter('.styles_col__2dlgD a div .styles_col__2dlgD .styles_col__2dlgD div p')->text();
-//            echo $node->filter('.styles_col__2dlgD a div .styles_col__2dlgD .styles_sm__Z_NM2')->text();
         });
     }
 }
