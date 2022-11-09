@@ -41,6 +41,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => 'admin'], function () {
 Route::group(['middleware' => ['user', 'verified'], 'prefix' => 'user'], function () {
     Route::get('/', [\App\Http\Controllers\User\Dashboard\DashboardController::class, 'index'])->name('user.dashboard');
     Route::get('/tracking', [\App\Http\Controllers\User\Tracking\TrackingController::class, 'index'])->name('user.tracking.index');
+    Route::get('/process', [\App\Http\Controllers\User\Tracking\TrackingController::class, 'process'])->name('process');
     Route::post('/tracking/process', [\App\Http\Controllers\User\Tracking\TrackingController::class, 'trackingProcess'])->name('user.tracking.process');
     Route::get('/tracking/artist/{id}', [\App\Http\Controllers\User\Tracking\TrackingController::class, 'trackingArtist'])->name('user.tracking.artist.index');
     Route::get('/top/picks', [\App\Http\Controllers\User\TopPicks\TopPicksController::class, 'index'])->name('user.top.picks.index');
