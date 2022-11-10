@@ -26,8 +26,8 @@ return new class extends Migration
             $table->unsignedInteger('quantity')->default(0);
             $table->string('quantity_m')->nullable();
             $table->string('quantity_v')->nullable();
-            $table->text('ticket_note')->nullable();
-            $table->string('ticket_status')->default('active');
+            $table->text('note')->nullable();
+            $table->string('status')->default('active');
             $table->timestamps();
         });
     }

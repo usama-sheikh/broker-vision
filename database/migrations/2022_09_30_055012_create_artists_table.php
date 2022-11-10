@@ -18,7 +18,7 @@ return new class extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->string('title')->nullable();
             $table->string('origin')->nullable();
-            $table->bigInteger('genre')->unsigned();
+            $table->bigInteger('genre')->unsigned()->nullable();
             $table->string('members')->nullable();
             $table->string('url')->nullable();
             $table->string('description')->nullable();
