@@ -64,8 +64,10 @@ class TrackingController extends Controller
                     $artistEvent = new ArtistEvent();
                     $artistEvent->artist_id = $artist->id;
                     $artistEvent->user_id = auth()->user()->id;
-                    $artistEvent->event_url = $celebrityUrl;
                     $celebrityEventUrl = 'https://www.vividseats.com'. $node->filter('.styles_col__2dlgD a')->attr('href');
+
+                    $celebrityEventUrlSegments = explode("/", parse_url($celebrityEventUrl, PHP_URL_PATH));
+                    $artistEvent->event_production_id = $celebrityEventUrl[3];
 //                    echo $node->filter('.styles_col__2dlgD a')->attr('href')  .'<br>';;
 //                    echo $node->filter('.styles_col__2dlgD a div div p')->text()  .'<br>';;
 //                    echo $node->filter('.styles_col__2dlgD a div div div p')->text()  .'<br>';;
@@ -80,7 +82,7 @@ class TrackingController extends Controller
                 DB::rollBack();
                 $log = new Log();
                 $log->title = 'Error';
-                $log->description = $e->getMessage();
+                $log->log = $e->getMessage();
                 $log->save();
                 return redirect()->back()->with('error', 'Something went wrong. Please try again.');
             }
@@ -98,7 +100,7 @@ class TrackingController extends Controller
 Feb 14, 2023';
 //        dd(redirect()->away($url));
         $productionId = explode("/", parse_url($url, PHP_URL_PATH));
-
+        dd($productionId);
         // fetching events code
 
         $response = Http::get(config('constants.vs_tickets_api_url'), [
