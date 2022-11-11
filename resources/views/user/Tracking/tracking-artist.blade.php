@@ -184,72 +184,32 @@
                                         <thead class="thead-light">
                                         <tr>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Artist</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Artist Name</th>
                                             <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Event Date</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Location</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">10/10/2022</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">9/10/2022</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">8/10/2022</th>
-                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">7/10/2022</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Event Time</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Event Venue</th>
+                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Event State</th>
+{{--                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">8/10/2022</th>--}}
+{{--                                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">7/10/2022</th>--}}
                                         </tr>
                                         </thead>
                                         <tbody>
-                                        <tr>
-                                            <td class="text-sm font-weight-normal">
-                                                <div class="form-check p-0">
-                                                    <input type="checkbox" class="form-check-input" id="customCheckDisabled">
-                                                </div>
-                                            </td>
-                                            <td class="text-sm font-weight-normal">Terrance Lewis</td>
-                                            <td class="text-sm font-weight-normal">July 02, 2022</td>
-                                            <td class="text-sm font-weight-normal">New York</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-sm font-weight-normal">
-                                                <div class="form-check p-0">
-                                                    <input type="checkbox" class="form-check-input" id="customCheckDisabled">
-                                                </div>
-                                            </td>
-                                            <td class="text-sm font-weight-normal">Terrance Lewis</td>
-                                            <td class="text-sm font-weight-normal">July 02, 2022</td>
-                                            <td class="text-sm font-weight-normal">New York</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-sm font-weight-normal">
-                                                <div class="form-check p-0">
-                                                    <input type="checkbox" class="form-check-input" id="customCheckDisabled">
-                                                </div>
-                                            </td>
-                                            <td class="text-sm font-weight-normal">Terrance Lewis</td>
-                                            <td class="text-sm font-weight-normal">July 02, 2022</td>
-                                            <td class="text-sm font-weight-normal">New York</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-sm font-weight-normal">
-                                                <div class="form-check p-0">
-                                                    <input type="checkbox" class="form-check-input" id="customCheckDisabled">
-                                                </div>
-                                            </td>
-                                            <td class="text-sm font-weight-normal">Terrance Lewis</td>
-                                            <td class="text-sm font-weight-normal">July 02, 2022</td>
-                                            <td class="text-sm font-weight-normal">New York</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                            <td class="text-sm font-weight-normal">$000.00</td>
-                                        </tr>
+                                        @if(count($artist->artist->artistEvents) > 0)
+                                            @foreach($artist->artist->artistEvents as $event)
+                                            <tr>
+                                                <td class="text-sm font-weight-normal">
+                                                    <div class="form-check p-0">
+                                                        <input type="checkbox" class="form-check-input" id="customCheckDisabled">
+                                                    </div>
+                                                </td>
+                                                <td class="text-sm font-weight-normal">{{ ucwords($event->singer) }}</td>
+                                                <td class="text-sm font-weight-normal">{{ $event->date }}</td>
+                                                <td class="text-sm font-weight-normal">{{ $event->time }}</td>
+                                                <td class="text-sm font-weight-normal">{{ $event->venue }}</td>
+                                                <td class="text-sm font-weight-normal">{{ $event->location }}</td>
+                                            </tr>
+                                            @endforeach
+                                        @endif
                                         </tbody>
                                     </table>
                                 </div>

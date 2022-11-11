@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('artist_events', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('admin_id')->nullable();
             $table->unsignedBigInteger('artist_id');
             $table->longText('event_url')->nullable();
             $table->string('production_id')->nullable();
@@ -33,8 +33,9 @@ return new class extends Migration
             $table->string('venueCountry')->nullable();
             $table->string('venueTimeZone')->nullable();
             $table->string('productionCategory')->nullable();
-            $table->text('notes')->nullable();
             $table->timestamp('date_time')->nullable();
+            $table->text('notes')->nullable();
+            $table->text('remarks')->nullable();
             $table->string('status')->default('active');
             $table->timestamps();
         });

@@ -8,4 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class EventTicket extends Model
 {
     use HasFactory;
+
+    public function artistEvent() {
+        return $this->belongsTo(ArtistEvent::class);
+    }
 }

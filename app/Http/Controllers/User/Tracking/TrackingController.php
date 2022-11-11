@@ -5,6 +5,8 @@ namespace App\Http\Controllers\User\Tracking;
 use App\Http\Controllers\Controller;
 use App\Models\Artist;
 use App\Models\ArtistEvent;
+use App\Models\ArtistFollower;
+use App\Models\EventTicket;
 use App\Models\Log;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -30,11 +32,18 @@ class TrackingController extends Controller
      */
     public function trackingArtist($id)
     {
-        return view('user.Tracking.tracking-artist');
+        $artist = ArtistFollower::with('artist.artistEvents')->where('artist_id', $id)->where('user_id', auth()->user()->id)->first();
+        if(!is_null($artist)){
+            return view('user.Tracking.tracking-artist', compact('artist'));
+        }else{
+            return redirect()->route('user.tracking.index')->with('error', 'Artist not found, Please follow the artist or try again.');
+        }
+
     }
 
     public function trackingProcess(Request $request)
     {
+         return redirect()->route('user.tracking.artist.index', ['id' => 1]);
         $request->validate([
             'url' => 'required|url',
         ]);
@@ -53,15 +62,24 @@ class TrackingController extends Controller
                 $destinationPath=public_path()."/sample/";
                 DB::beginTransaction();
 
-                $artist = Artist::where('user_id', auth()->user()->id)->where('url', $celebrityUrl)->first();
+                $artist = Artist::where('url', $celebrityUrl)->first();
                 if(is_null($artist)){
                     $artist = new Artist();
-                    $artist->user_id = auth()->user()->id;
                 }
                 $artist->url = $request->url;
                 $artist->save();
 
+                // check user is artist follower or not
+
                 File::put($destinationPath.$sampleFile,$response->body());
+
+                $follower = ArtistFollower::where('artist_id', $artist->id)->where('user_id', auth()->user()->id)->first();
+                if(is_null($follower)){
+                    $follower = new ArtistFollower();
+                    $follower->artist_id = $artist->id;
+                    $follower->user_id = auth()->user()->id;
+                    $follower->save();
+                }
 
                 $crawler = Goutte::request('GET', url('sample.html'));
                 $crawler->filter('.styles_display-none__kcAaY > .styles_grid__2V6e6')->each(function ($node) use($artist) {
@@ -74,8 +92,6 @@ class TrackingController extends Controller
                             $artistEvent = new ArtistEvent();
                         }
                         $artistEvent->artist_id = $artist->id;
-                        $artistEvent->user_id = auth()->user()->id;
-
                         $celebrityEventUrl = 'https://www.vividseats.com'. $node->filter('.styles_col__2dlgD a')->attr('href');
                         $artistEvent->event_url = $celebrityEventUrl;
                         $artistEvent->production_id = $celebrityEventUrlSegments[3];
@@ -102,9 +118,67 @@ class TrackingController extends Controller
 
 
                 });
+
+                if($artist->artistEvents->count() > 0) {
+                    foreach ($artist->artistEvents as $artistEvent) {
+                        $ticketsResponse = Http::timeout(300)->get(config('constants.sc_api_url'), [
+                            'url' => config('constants.vs_tickets_api_url').$artistEvent->production_id,
+                            'api_key'=> config('constants.sc_api_key'),
+                        ]);
+
+                        if($ticketsResponse->successful()){
+                            $ticketsResponse = $ticketsResponse->json();
+                            $tickets = $ticketsResponse['tickets'];
+                            $ticketsGlobal = $ticketsResponse['global'];
+
+                            if(isset($ticketsGlobal['global'][0])){
+                                $artistEvent->listingCount = (isset($ticketsGlobal['global'][0]['listing_count'])) ? $ticketsGlobal['global'][0]['listing_count'] : null;
+                                $artistEvent->ticketCount = (isset($ticketsGlobal['global'][0]['ticket_count'])) ? $ticketsGlobal['global'][0]['ticket_count'] : null;
+                                $artistEvent->mapTitle = (isset($ticketsGlobal['global'][0]['map_title'])) ? $ticketsGlobal['global'][0]['map_title'] : null;
+                                $artistEvent->venueCountry = (isset($ticketsGlobal['global'][0]['venue_country'])) ? $ticketsGlobal['global'][0]['venue_country'] : null;
+                                $artistEvent->venueTimeZone = (isset($ticketsGlobal['global'][0]['venue_timezone'])) ? $ticketsGlobal['global'][0]['venue_timezone'] : null;
+                                $artistEvent->productionCategory = (isset($ticketsGlobal['global'][0]['production_category'])) ? $ticketsGlobal['global'][0]['production_category'] : null;
+                                $artistEvent->save();
+                            }
+
+                            if(count($tickets) > 0){
+                                foreach ($tickets as $ticket) {
+                                    $eventTicket = EventTicket::where('production_id',$ticket['productionId'])
+                                        ->where('ticket_id',$ticket['i'])
+                                        ->where('row',$ticket['r'])
+                                        ->where('section',$ticket['s'])->first();
+                                    if(is_null($eventTicket)){
+                                        $eventTicket = new EventTicket();
+                                        $eventTicket->artist_id = $artistEvent->artist_id;
+                                        $eventTicket->event_id = $artistEvent->id;
+                                        $eventTicket->production_id = $ticket['productionId'];
+                                    }
+
+                                    $eventTicket->ticket_id = $ticket['i'];
+                                    $eventTicket->price = $ticket['p'];
+                                    $eventTicket->section = $ticket['s'];
+                                    $eventTicket->row = $ticket['r'];
+                                    $eventTicket->quantity = $ticket['q'];
+                                    $eventTicket->quantity_m = $ticket['m'];
+                                    $eventTicket->quantity_v = $ticket['v'];
+                                    $eventTicket->note = $ticket['n'];
+                                    $eventTicket->save();
+                                }
+                            }else{
+                                $log = new Log();
+                                $log->title = 'No Tickets Found';
+                                $log->description = 'No Tickets Found for '.$artistEvent->title;
+                                $log->save();
+
+                            }
+                        }
+
+                    }
+                }
                 // end task
-                // File::delete($destinationPath.$sampleFile);
+                File::delete($destinationPath.$sampleFile);
                 DB::commit();
+                return redirect()->route('user.tracking.artist.index', ['id' => $artist->id]);
             }catch (\Exception $e){
                 DB::rollBack();
                 $log = new Log();

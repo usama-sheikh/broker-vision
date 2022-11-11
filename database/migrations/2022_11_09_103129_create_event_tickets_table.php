@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('event_tickets', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('artist_id');
             $table->unsignedBigInteger('event_id');
             $table->string('production_id')->nullable();

@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('artists', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('user_id')->unsigned();
             $table->string('title')->nullable();
             $table->string('origin')->nullable();
             $table->bigInteger('genre')->unsigned()->nullable();

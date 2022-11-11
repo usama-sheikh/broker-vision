@@ -34,4 +34,8 @@ class Artist extends Model
             return asset('assets/img/no-image.jpg');
         }
     }
+
+    public function artistEvents() {
+        return $this->hasMany(ArtistEvent::class);
+    }
 }

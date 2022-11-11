@@ -5,11 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class ArtistEvent extends Model
+class ArtistFollower extends Model
 {
     use HasFactory;
 
-    public function eventTickets() {
-        return $this->hasMany(EventTicket::class);
+    public function artist() {
+        return $this->belongsTo(Artist::class);
     }
 }
